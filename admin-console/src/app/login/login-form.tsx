@@ -141,7 +141,8 @@ export function AdminLoginForm({
         </div>
 
         <p className="mt-4 text-center text-[10.5px] leading-4 text-[var(--adm-muted)]">
-          Sign-in attempts are recorded. Unauthorised access is prohibited.
+          Successful administrator sign-ins are recorded in the audit log. Unauthorised
+          access is prohibited.
         </p>
       </main>
     </div>
