@@ -190,10 +190,14 @@ free tier with no billing account:
 ```
 AI_PROVIDER=openai-compatible
 AI_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai
-AI_MODEL=gemini-2.5-flash
+AI_MODEL=gemini-flash-lite-latest
 AI_JSON_MODE=true
 AI_API_KEY=<key from https://aistudio.google.com/apikey>
 ```
+
+Keys created in the Google Cloud console now require a service account binding
+and a Gemini API restriction; AI Studio keys work unchanged. Use a `-latest`
+alias: retired model IDs answer with 404, and busy models answer with 503.
 
 If the configured model rejects `response_format`, the provider retries once
 without JSON mode, so a different Gemini model can be dropped in through
