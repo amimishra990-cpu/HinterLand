@@ -121,6 +121,20 @@ In **Authentication → URL Configuration**:
 Set a minimum password length of 8 in the auth settings to match the client
 validation, and review the built-in auth rate limits before launch.
 
+**Email delivery (Resend SMTP).** The built-in sender is capped at two
+messages per hour per project, which blocks real signup and recovery. In
+**Authentication → Emails → SMTP Settings**, enter:
+
+- Host: `smtp.resend.com`
+- Port: `465` (SSL) or `587` (STARTTLS)
+- Username: `resend`
+- Password: a Resend API key
+- Sender email: an address on a domain verified in Resend
+
+Resend's `onboarding@resend.dev` sender only delivers to the Resend account
+owner's address, so verify a domain and its DNS records before launch. After
+saving, send a test confirmation and a password reset from the app.
+
 ### 3.3 Storage
 
 The `documents` bucket must exist and be **private**:
@@ -169,6 +183,21 @@ analysis, knowledge answers, development) stay disabled until all three of
 For an OpenAI-compatible gateway, also set `AI_BASE_URL` to an HTTPS endpoint.
 The per-user hourly quota is enforced from `ai_runs`; adjust
 `AI_REQUESTS_PER_HOUR` deliberately.
+
+Google AI Studio (Gemini) works through the same compatible protocol and has a
+free tier with no billing account:
+
+```
+AI_PROVIDER=openai-compatible
+AI_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai
+AI_MODEL=gemini-2.5-flash
+AI_JSON_MODE=true
+AI_API_KEY=<key from https://aistudio.google.com/apikey>
+```
+
+If the configured model rejects `response_format`, the provider retries once
+without JSON mode, so a different Gemini model can be dropped in through
+`AI_MODEL` alone.
 
 The application never returns provider error bodies to the browser and never
 persists prompt text, document text, or model output in `ai_runs`.
