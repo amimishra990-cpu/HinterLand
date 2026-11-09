@@ -4,6 +4,7 @@ Standalone administrator console for HINTERLAND. It is a separate Next.js
 application and a separate deployment from the public site; only the Supabase
 project is shared.
 
+- Deployment: `https://hinterland-admin.vercel.app`
 - Console: `/admin`
 - Sign in: `/login` (administrator accounts only; ordinary accounts are rejected)
 - First sign-in after provisioning is redirected to `/admin/set-password`
