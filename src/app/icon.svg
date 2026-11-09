@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" role="img" aria-label="Hinterland">
+  <rect width="32" height="32" fill="#304E3E" />
+  <path d="M10 8v16M22 8v16M10 16h12" stroke="#F5F2E9" stroke-width="2" />
+  <path d="M8 26h16" stroke="#C9AD75" stroke-width="1.5" />
+</svg>
