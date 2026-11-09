@@ -5,7 +5,7 @@ import type { User } from "@supabase/supabase-js";
 
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured, supabaseEnvironmentIssue } from "@/lib/supabase/config";
-import { reportIssue } from "@/lib/admin/telemetry";
+import { reportIssue } from "@/lib/telemetry";
 
 type ApiContext =
   | {

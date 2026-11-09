@@ -8,7 +8,7 @@ export const onRequestError: Instrumentation.onRequestError = async (
   if (process.env.NEXT_RUNTIME !== "nodejs") return;
 
   try {
-    const { reportIssue } = await import("@/lib/admin/telemetry");
+    const { reportIssue } = await import("@/lib/telemetry");
     const digest =
       typeof error === "object" && error !== null && "digest" in error
         ? String((error as { digest?: string }).digest ?? "")

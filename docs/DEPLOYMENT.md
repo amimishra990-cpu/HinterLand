@@ -10,6 +10,7 @@ configuration the application expects; it does not deploy anything by itself.
 | --- | --- |
 | Production URL | `https://hinter-land.vercel.app` |
 | Host | Vercel, project `hinter-land`, connected to `amimishra990-cpu/HinterLand` `main` |
+| Admin console | `https://hinterland-admin.vercel.app`, separate Vercel project `hinterland-admin` rooted at `admin-console/` |
 | Database and auth | Supabase project `qewxigzaymgwqlvkswcz` |
 | AI provider | Gemini `gemini-flash-lite-latest` through the OpenAI-compatible endpoint |
 | Site URL and redirects | Supabase Site URL is the production origin; the allowlist holds `https://hinter-land.vercel.app/**` and `http://localhost:3000/**` |
@@ -127,6 +128,8 @@ In **Authentication → URL Configuration**:
   - `https://<production-host>/auth/callback`
   - `https://<production-host>/auth/confirm`
   - `https://<production-host>/reset-password`
+  - `https://hinterland-admin.vercel.app/auth/callback`
+  - `https://hinterland-admin.vercel.app/reset-password`
   - Preview deployments, if used, need their own exact URLs or a narrowly
     scoped wildcard. Do not allow arbitrary origins.
 
@@ -258,6 +261,26 @@ Operational consequences:
 6. Deploy, then add the production domain and update the Supabase Site URL and
    redirect allowlist.
 7. Do not enable a public deployment until the owner authorizes it.
+
+### 6.1 Admin console as a separate project
+
+The admin console is a standalone Next.js app in `admin-console/` and must not
+be served by the public application. On Vercel:
+
+1. Import the same repository again as a new project named `hinterland-admin`.
+2. Set **Root Directory** to `admin-console` and keep the **Next.js** preset.
+   Import it as a standalone project, not as a multi-service project.
+3. Add `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`,
+   `NEXT_PUBLIC_SITE_URL=https://hinterland-admin.vercel.app`,
+   `NEXT_PUBLIC_MAIN_SITE_URL=https://hinter-land.vercel.app`, and
+   `MAIN_SITE_URL=https://hinter-land.vercel.app`. No AI key is required; when
+   it is absent the console reports the AI provider as not configured.
+4. Deploy. Every push to `main` then rebuilds both projects, each from its own
+   root directory.
+
+The console has no `/admin` prefix on its own domain: `https://hinterland-admin.vercel.app/`
+redirects to `/admin`, and unauthenticated visitors are sent to `/login`. The
+public project no longer serves `/admin` or `/api/admin`.
 
 Security headers are set in `next.config.ts` for every route:
 `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`,

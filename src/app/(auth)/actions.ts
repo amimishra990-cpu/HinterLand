@@ -8,7 +8,7 @@ import { getSiteUrl } from "@/lib/site-url";
 import {
   recordOwnAuthEvent,
   recordPublicAuthEvent,
-} from "@/lib/admin/telemetry";
+} from "@/lib/telemetry";
 import {
   isValidEmail,
   normalizeEmail,
@@ -93,7 +93,7 @@ export async function signInAction(
 
   if (!isValidEmail(email)) return { error: "Enter a valid email address." };
 
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
     await recordPublicAuthEvent("login_failed", {
@@ -109,27 +109,6 @@ export async function signInAction(
   }
 
   await recordOwnAuthEvent(supabase, "login");
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("is_admin, must_change_password")
-    .eq("id", data.user.id)
-    .maybeSingle();
-
-  const adminProfile = profile as
-    | { is_admin: boolean; must_change_password: boolean }
-    | null;
-
-  if (adminProfile?.is_admin) {
-    await supabase.rpc("record_admin_login");
-    if (adminProfile.must_change_password) {
-      redirect("/admin/set-password");
-    }
-  }
-
-  if (next.startsWith("/admin") && !adminProfile?.is_admin) {
-    redirect("/app");
-  }
 
   redirect(next);
 }
@@ -230,17 +209,6 @@ export async function updatePasswordAction(
   if (error) return { error: authErrorMessage(error.message) };
 
   await recordOwnAuthEvent(supabase, "password_updated");
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("is_admin")
-    .eq("id", userData.user.id)
-    .maybeSingle();
-
-  if ((profile as { is_admin: boolean } | null)?.is_admin) {
-    await supabase.rpc("complete_admin_password_change");
-    redirect("/admin");
-  }
 
   redirect("/app");
 }

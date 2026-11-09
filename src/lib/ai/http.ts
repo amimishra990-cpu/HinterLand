@@ -3,7 +3,7 @@ import "server-only";
 import { NextResponse } from "next/server";
 import type { ZodType } from "zod";
 
-import { reportIssue } from "@/lib/admin/telemetry";
+import { reportIssue } from "@/lib/telemetry";
 import { resolveAiConfig } from "@/lib/ai/config";
 import { ContextAccessError } from "@/lib/ai/context";
 import { normalizeAiError, publicAiMessage } from "@/lib/ai/errors";

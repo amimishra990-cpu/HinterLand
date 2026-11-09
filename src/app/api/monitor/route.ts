@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { reportIssue, sanitizeRoute, sanitizeText } from "@/lib/admin/telemetry";
+import { reportIssue, sanitizeRoute, sanitizeText } from "@/lib/telemetry";
 import { sameOrigin } from "@/lib/api";
 
 const ALLOWED_CATEGORIES = new Set(["frontend", "api_client"]);
