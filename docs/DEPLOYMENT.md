@@ -121,19 +121,25 @@ In **Authentication → URL Configuration**:
 Set a minimum password length of 8 in the auth settings to match the client
 validation, and review the built-in auth rate limits before launch.
 
-**Email delivery (Resend SMTP).** The built-in sender is capped at two
-messages per hour per project, which blocks real signup and recovery. In
-**Authentication → Emails → SMTP Settings**, enter:
+**Email delivery (custom SMTP).** The built-in sender is capped at two
+messages per hour per project, which blocks real signup and recovery. Enabling
+custom SMTP in **Authentication → Emails → SMTP Settings** raises the default
+cap to thirty messages per hour; the cap is separately tunable under
+**Authentication → Rate Limits**.
 
-- Host: `smtp.resend.com`
-- Port: `465` (SSL) or `587` (STARTTLS)
-- Username: `resend`
-- Password: a Resend API key
-- Sender email: an address on a domain verified in Resend
+Two upstreams work:
 
-Resend's `onboarding@resend.dev` sender only delivers to the Resend account
-owner's address, so verify a domain and its DNS records before launch. After
-saving, send a test confirmation and a password reset from the app.
+- Resend (`smtp.resend.com`, port `465` or `587`, username `resend`,
+  password: a Resend API key). The sender must use a domain verified in
+  Resend with its DNS records; `onboarding@resend.dev` only delivers to the
+  Resend account owner.
+- Gmail (`smtp.gmail.com`, port `465` or `587`, username: the full address,
+  password: a 16-character Google App Password, sender: the same address).
+  This needs 2-Step Verification on the Google account, delivers to any
+  recipient, and is suitable for small deployments; Supabase warns that
+  personal mail providers may affect deliverability.
+
+After saving, send a test confirmation and a password reset from the app.
 
 ### 3.3 Storage
 
