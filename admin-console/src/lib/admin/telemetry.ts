@@ -1,7 +1,7 @@
 import "server-only";
 
 import { createHash } from "node:crypto";
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { createClient } from "@supabase/supabase-js";
 
 import {
   SUPABASE_PUBLISHABLE_KEY,
@@ -132,45 +132,6 @@ export async function reportIssue(input: IssueInput): Promise<void> {
   } catch (error) {
     console.error(
       "Issue reporting failed",
-      error instanceof Error ? error.message : "unknown"
-    );
-  }
-}
-
-export async function recordPublicAuthEvent(
-  eventType: "login_failed" | "password_recovery_requested",
-  input: { email: string; success: boolean; reason?: string | null }
-): Promise<void> {
-  if (!isSupabaseConfigured()) return;
-  try {
-    await telemetryClient().rpc("record_public_auth_event", {
-      p_event_type: eventType,
-      p_email: input.email,
-      p_success: input.success,
-      p_reason: input.reason ?? null,
-    });
-  } catch (error) {
-    console.error(
-      "Auth event logging failed",
-      error instanceof Error ? error.message : "unknown"
-    );
-  }
-}
-
-export async function recordOwnAuthEvent(
-  supabase: SupabaseClient,
-  eventType:
-    | "login"
-    | "logout"
-    | "password_updated"
-    | "email_verified"
-    | "session_expired"
-): Promise<void> {
-  try {
-    await supabase.rpc("record_own_auth_event", { p_event_type: eventType });
-  } catch (error) {
-    console.error(
-      "Auth event logging failed",
       error instanceof Error ? error.message : "unknown"
     );
   }

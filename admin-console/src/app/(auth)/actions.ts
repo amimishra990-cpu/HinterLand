@@ -6,10 +6,6 @@ import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured, supabaseEnvironmentIssue } from "@/lib/supabase/config";
 import { getSiteUrl } from "@/lib/site-url";
 import {
-  recordOwnAuthEvent,
-  recordPublicAuthEvent,
-} from "@/lib/admin/telemetry";
-import {
   isValidEmail,
   normalizeEmail,
   passwordProblem,
@@ -43,14 +39,6 @@ function authErrorMessage(message: string) {
     return "Too many attempts. Wait a moment and try again.";
   }
   return "Authentication failed. Please try again.";
-}
-
-function authFailureCode(message: string) {
-  const lower = message.toLowerCase();
-  if (lower.includes("invalid login credentials")) return "invalid_credentials";
-  if (lower.includes("email not confirmed")) return "email_not_confirmed";
-  if (lower.includes("rate limit") || lower.includes("too many")) return "rate_limited";
-  return "authentication_failed";
 }
 
 function adminNext(value: FormDataEntryValue | null) {
@@ -92,11 +80,6 @@ export async function signInAction(
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
-    await recordPublicAuthEvent("login_failed", {
-      email,
-      success: false,
-      reason: authFailureCode(error.message),
-    });
     return { error: authErrorMessage(error.message), email };
   }
 
@@ -111,16 +94,10 @@ export async function signInAction(
     | null;
 
   if (!adminProfile?.is_admin) {
-    await recordPublicAuthEvent("login_failed", {
-      email,
-      success: false,
-      reason: "not_admin",
-    });
     await supabase.auth.signOut({ scope: "local" });
     return { error: "This account does not have administrator access." };
   }
 
-  await recordOwnAuthEvent(supabase, "login");
   await supabase.rpc("record_admin_login");
 
   if (adminProfile.must_change_password) {
@@ -133,10 +110,6 @@ export async function signInAction(
 export async function signOutAction() {
   if (isSupabaseConfigured()) {
     const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (user) await recordOwnAuthEvent(supabase, "logout");
     await supabase.auth.signOut({ scope: "local" });
   }
   redirect("/login");
@@ -155,12 +128,6 @@ export async function requestPasswordResetAction(
   const supabase = await createClient();
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${siteUrl}/auth/callback?next=/reset-password`,
-  });
-
-  await recordPublicAuthEvent("password_recovery_requested", {
-    email,
-    success: !error,
-    reason: error ? "request_failed" : null,
   });
 
   if (error) return { error: authErrorMessage(error.message) };
@@ -207,7 +174,6 @@ export async function updatePasswordAction(
   const { error } = await supabase.auth.updateUser({ password });
   if (error) return { error: authErrorMessage(error.message) };
 
-  await recordOwnAuthEvent(supabase, "password_updated");
   await supabase.rpc("complete_admin_password_change");
 
   redirect("/admin");

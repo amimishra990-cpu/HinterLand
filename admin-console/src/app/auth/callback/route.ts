@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
-import { recordOwnAuthEvent } from "@/lib/admin/telemetry";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -36,10 +35,6 @@ export async function GET(request: Request) {
     const target = new URL("/login", url.origin);
     target.searchParams.set("error", "link-invalid");
     return NextResponse.redirect(target);
-  }
-
-  if (type === "signup" || type === "email") {
-    await recordOwnAuthEvent(supabase, "email_verified");
   }
 
   return NextResponse.redirect(new URL(fallback, url.origin));
