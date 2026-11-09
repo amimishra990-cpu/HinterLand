@@ -28,6 +28,8 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false, nocache: true },
 };
 
+const THEME_BOOT_SCRIPT = `(function(){try{var s=localStorage.getItem("hinterland-admin-theme");if(s==="dark"||(!s&&window.matchMedia("(prefers-color-scheme: dark)").matches)){document.documentElement.dataset.theme="dark";}}catch(e){}})();`;
+
 export default function AdminRootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html
@@ -35,6 +37,9 @@ export default function AdminRootLayout({ children }: Readonly<{ children: React
       className={`${newsreader.variable} ${dmSans.variable}`}
       suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
+      </head>
       <body className="min-h-dvh antialiased">{children}</body>
     </html>
   );

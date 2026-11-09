@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 
 import { signOutAction } from "@/app/(auth)/actions";
+import { ThemeToggle } from "@/components/admin/theme-toggle";
 
 const NAV = [
   { href: "/admin", label: "Overview", icon: LayoutDashboard, exact: true },
@@ -187,7 +188,7 @@ export function AdminShell({
       ) : null}
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-40 border-b border-[var(--adm-line)] bg-[rgba(251,248,240,0.94)] backdrop-blur-sm">
+        <header className="sticky top-0 z-40 border-b border-[var(--adm-line)] bg-[var(--adm-header)] backdrop-blur-sm">
           <div className="flex h-12 items-center gap-2 px-3 sm:px-5">
             <button
               type="button"
@@ -202,9 +203,12 @@ export function AdminShell({
             <span className="text-[11.5px] font-medium text-[var(--adm-ink-soft)]">
               Administration
             </span>
-            <span className="ml-auto flex items-center gap-1.5 text-[10.5px] text-[var(--adm-muted)]">
-              <ShieldCheck size={12} aria-hidden="true" />
-              Server-verified administrator
+            <span className="ml-auto flex items-center gap-2.5">
+              <span className="hidden items-center gap-1.5 text-[10.5px] text-[var(--adm-muted)] sm:flex">
+                <ShieldCheck size={12} aria-hidden="true" />
+                Server-verified administrator
+              </span>
+              <ThemeToggle />
             </span>
           </div>
         </header>

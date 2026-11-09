@@ -24,8 +24,14 @@
   --adm-navy-soft: #e3e8f0;
   --adm-charcoal: #1d2620;
   --adm-charcoal-soft: #263129;
+  --adm-field: #fffdf7;
+  --adm-header: rgba(251, 248, 240, 0.94);
+  --adm-action: #304e3e;
+  --adm-action-hover: #223a2d;
+  --adm-action-ink: #f7f3e7;
 
   min-height: 100dvh;
+  color-scheme: light;
   background-color: var(--adm-bg);
   background-image:
     radial-gradient(80% 50% at 100% 0%, rgba(201, 173, 117, 0.16), transparent 60%),
@@ -107,7 +113,7 @@
   width: 100%;
   border: 1px solid var(--adm-line-strong);
   border-radius: 5px;
-  background-color: #fffdf7;
+  background-color: var(--adm-field);
   padding: 7px 10px;
   font-size: 13px;
   line-height: 1.5;
@@ -156,12 +162,12 @@
 }
 
 .admin-btn-primary {
-  background-color: var(--adm-forest);
-  color: #f7f3e7;
+  background-color: var(--adm-action);
+  color: var(--adm-action-ink);
 }
 
 .admin-btn-primary:hover:not(:disabled) {
-  background-color: var(--adm-forest-deep);
+  background-color: var(--adm-action-hover);
 }
 
 .admin-btn-secondary {
@@ -316,3 +322,88 @@
     animation: none !important;
   }
 }
+
+/*
+ * Dark theme. Only the token layer changes, so every surface built from the
+ * --adm variables follows automatically; the few rules that hardcode an rgba
+ * are restated below.
+ */
+html[data-theme="dark"] .admin-theme {
+  --adm-bg: #121814;
+  --adm-panel: #1b241e;
+  --adm-panel-soft: #202a23;
+  --adm-panel-strong: #27322a;
+  --adm-ink: #e9e3d5;
+  --adm-ink-soft: #c4c0b2;
+  --adm-muted: #9aa194;
+  --adm-line: #2a352c;
+  --adm-line-strong: #3b473c;
+  --adm-forest: #8fbfa4;
+  --adm-forest-deep: #a7cdb4;
+  --adm-gold: #d0b47c;
+  --adm-gold-soft: rgba(201, 173, 117, 0.16);
+  --adm-terracotta: #d99a7a;
+  --adm-terracotta-soft: rgba(217, 154, 122, 0.16);
+  --adm-sage: #8fbfa4;
+  --adm-sage-soft: rgba(143, 191, 164, 0.16);
+  --adm-red: #e08b7a;
+  --adm-red-soft: rgba(224, 139, 122, 0.16);
+  --adm-navy: #9fb4d4;
+  --adm-navy-soft: rgba(159, 180, 212, 0.16);
+  --adm-charcoal: #e9e3d5;
+  --adm-charcoal-soft: #c4c0b2;
+  --adm-field: #182019;
+  --adm-header: rgba(18, 24, 20, 0.9);
+  --adm-action: #3d6750;
+  --adm-action-hover: #4a7a5f;
+  --adm-action-ink: #f3f0e4;
+
+  background-image:
+    radial-gradient(80% 50% at 100% 0%, rgba(201, 173, 117, 0.08), transparent 60%),
+    radial-gradient(70% 60% at 0% 100%, rgba(143, 191, 164, 0.06), transparent 65%);
+  color-scheme: dark;
+}
+
+html[data-theme="dark"] .admin-theme .admin-input:focus,
+html[data-theme="dark"] .admin-theme .admin-select:focus,
+html[data-theme="dark"] .admin-theme .admin-textarea:focus {
+  box-shadow: 0 0 0 3px rgba(143, 191, 164, 0.2);
+}
+
+html[data-theme="dark"] .admin-theme .admin-btn-secondary:hover:not(:disabled) {
+  border-color: var(--adm-action);
+}
+
+html[data-theme="dark"] .admin-theme .admin-table tbody tr:hover {
+  background-color: rgba(239, 234, 222, 0.05);
+}
+
+html[data-theme="dark"] .admin-theme .admin-link {
+  text-decoration-color: rgba(143, 191, 164, 0.4);
+}
+
+html[data-theme="dark"] .admin-theme .admin-spinner {
+  border-color: rgba(143, 191, 164, 0.25);
+  border-top-color: var(--adm-forest);
+}
+
+html[data-theme="dark"] .admin-theme .admin-badge-forest {
+  color: #b9d8c6;
+}
+
+html[data-theme="dark"] .admin-theme .admin-badge-gold {
+  color: #e3cb99;
+}
+
+html[data-theme="dark"] .admin-theme .admin-badge-terracotta {
+  color: #e8b39a;
+}
+
+html[data-theme="dark"] .admin-theme .admin-badge-red {
+  color: var(--adm-red);
+}
+
+html[data-theme="dark"] .admin-theme .admin-badge-navy {
+  color: var(--adm-navy);
+}
+
