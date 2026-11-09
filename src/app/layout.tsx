@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { DM_Sans, Newsreader } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ErrorReporter } from "@/components/app/error-reporter";
 import { SessionBridge } from "@/components/app/session-bridge";
 import "./globals.css";
 
@@ -47,6 +48,7 @@ export default function RootLayout({
           Skip to content
         </a>
         <TooltipProvider delayDuration={250}>
+          <ErrorReporter />
           <SessionBridge />
           {children}
         </TooltipProvider>

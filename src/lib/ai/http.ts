@@ -3,11 +3,21 @@ import "server-only";
 import { NextResponse } from "next/server";
 import type { ZodType } from "zod";
 
+import { reportIssue } from "@/lib/admin/telemetry";
 import { resolveAiConfig } from "@/lib/ai/config";
 import { ContextAccessError } from "@/lib/ai/context";
 import { normalizeAiError, publicAiMessage } from "@/lib/ai/errors";
 
 const NO_STORE = { "cache-control": "no-store" } as const;
+
+const CRITICAL_AI_CODES = new Set(["ai_auth_failed"]);
+const WARNING_AI_CODES = new Set([
+  "ai_rate_limited",
+  "ai_quota_exceeded",
+  "ai_not_configured",
+  "ai_refused",
+  "ai_truncated",
+]);
 
 export function noStore<T>(body: T, status = 200) {
   return NextResponse.json(body, { status, headers: NO_STORE });
@@ -23,6 +33,16 @@ export function aiFailure(error: unknown) {
 
   const normalized = normalizeAiError(error);
   console.error("AI route failure", normalized.code);
+  void reportIssue({
+    category: "ai",
+    severity: CRITICAL_AI_CODES.has(normalized.code)
+      ? "critical"
+      : WARNING_AI_CODES.has(normalized.code)
+        ? "warning"
+        : "error",
+    message: `AI request failed: ${normalized.code}`,
+    metadata: { code: normalized.code, status: normalized.status },
+  });
 
   let detail: string | undefined;
   if (normalized.code === "ai_not_configured") {

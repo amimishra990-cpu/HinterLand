@@ -75,13 +75,14 @@ export function LoginForm({
 
       <form action={formAction} className="mt-4 space-y-3.5">
         <input type="hidden" name="next" value={next} />
-        <Field label="Email" htmlFor="login-email" required>
+        <Field label="Email or username" htmlFor="login-email" required>
           <Input
             id="login-email"
             name="email"
-            type="email"
-            autoComplete="email"
-            placeholder="you@example.com"
+            type="text"
+            autoComplete="username"
+            spellCheck={false}
+            placeholder="you@example.com or username"
             required
           />
         </Field>

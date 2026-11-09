@@ -5,6 +5,7 @@ import type { User } from "@supabase/supabase-js";
 
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured, supabaseEnvironmentIssue } from "@/lib/supabase/config";
+import { reportIssue } from "@/lib/admin/telemetry";
 
 type ApiContext =
   | {
@@ -71,5 +72,11 @@ export function notFound(message = "Record not found.") {
 }
 
 export function serverError(message = "The request could not be completed.") {
+  void reportIssue({
+    category: "api",
+    severity: "error",
+    message,
+    metadata: { status: 500 },
+  });
   return NextResponse.json({ error: message }, { status: 500 });
 }

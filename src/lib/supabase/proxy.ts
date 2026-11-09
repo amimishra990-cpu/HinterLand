@@ -37,6 +37,15 @@ export async function updateSession(request: NextRequest) {
   const user = error ? null : data.user;
   const { pathname, search } = request.nextUrl;
 
+  if (!user && pathname.startsWith("/admin")) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/login";
+    url.search = "";
+    url.searchParams.set("next", `${pathname}${search}`);
+    if (error) url.searchParams.set("reason", "session-expired");
+    return NextResponse.redirect(url);
+  }
+
   if (!user && pathname.startsWith("/app")) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
