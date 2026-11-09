@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { DM_Sans, Newsreader } from "next/font/google";
 
 import "./globals.css";
+import "./admin/admin.css";
 
 const newsreader = Newsreader({
   subsets: ["latin"],
