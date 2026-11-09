@@ -35,13 +35,16 @@ export async function proxy(request: NextRequest) {
   const { data, error } = await supabase.auth.getUser();
   const user = error ? null : data.user;
   const { pathname, search } = request.nextUrl;
+  const hadSessionCookie = request.cookies
+    .getAll()
+    .some(({ name }) => name.startsWith("sb-") && name.includes("-auth-token"));
 
   if (!user && pathname.startsWith("/admin")) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     url.search = "";
     url.searchParams.set("next", `${pathname}${search}`);
-    if (error) url.searchParams.set("reason", "session-expired");
+    if (error && hadSessionCookie) url.searchParams.set("reason", "session-expired");
     return NextResponse.redirect(url);
   }
 
