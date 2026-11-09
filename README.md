@@ -4,7 +4,9 @@
 
 Hinterland is a context-aware professional workspace that connects communication refinement, meeting preparation, meeting documentation, document intelligence, and knowledge retrieval around a single project thread.
 
-This repository contains the **public website with an interactive 3D scroll experience** and a **full-stack workspace** at `/app` backed by Supabase Auth, Postgres with row-level security, and a private storage bucket. Documents are extracted in the browser (PDF.js, Mammoth, Tesseract.js OCR), stored per page in a private page index, and searchable through PostgreSQL full-text search. AI features are implemented server-side and activate once provider credentials are configured.
+This repository contains the **public website with an interactive 3D scroll experience** and a **full-stack workspace** at `/app` backed by Supabase Auth, Postgres with row-level security, and a private storage bucket. Documents are extracted in the browser (PDF.js, Mammoth, Tesseract.js OCR), stored per page in a private page index, and searchable through PostgreSQL full-text search. AI features run server-side and are live on the deployment through an OpenAI-compatible Gemini endpoint.
+
+**Live deployment:** [https://hinter-land.vercel.app](https://hinter-land.vercel.app) — Vercel project `hinter-land` connected to `main`; Supabase Auth, Postgres, storage, Gemini, and custom SMTP are configured for the production domain.
 
 ---
 
@@ -21,7 +23,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 - Node.js **22+** for deployment (`@supabase/supabase-js` declares `>=22`; Next.js
   itself requires `>=20.9`). The build, typecheck, ESLint, and Vitest suite in
-  this repository were verified on Node 20.18.0; use Node 22 or 24 LTS for
+  this repository were verified on Node 24.22.1; use Node 22 or 24 LTS for
   production.
 - npm 10+
 

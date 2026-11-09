@@ -4,9 +4,21 @@ Hinterland deploys as a standard Next.js application with an existing Supabase
 project for auth, Postgres, and private storage. This document describes the
 configuration the application expects; it does not deploy anything by itself.
 
-No public deployment has been performed. Publishing requires the repository
-owner's explicit authorization. Never commit `.env.local` or paste credentials
-into chat, issues, or build logs.
+## Current deployment
+
+| Item | Value |
+| --- | --- |
+| Production URL | `https://hinter-land.vercel.app` |
+| Host | Vercel, project `hinter-land`, connected to `amimishra990-cpu/HinterLand` `main` |
+| Database and auth | Supabase project `qewxigzaymgwqlvkswcz` |
+| AI provider | Gemini `gemini-flash-lite-latest` through the OpenAI-compatible endpoint |
+| Site URL and redirects | Supabase Site URL is the production origin; the allowlist holds `https://hinter-land.vercel.app/**` and `http://localhost:3000/**` |
+| Email | Custom SMTP (Gmail App Password), thirty messages per hour |
+
+Every push to `main` creates a production deployment. Preview deployments reuse
+the same environment variables, so their auth links point at the production
+origin. Never commit `.env.local` or paste credentials into chat, issues, or
+build logs.
 
 ---
 
@@ -14,7 +26,7 @@ into chat, issues, or build logs.
 
 | Requirement | Notes |
 | --- | --- |
-| Node.js | 22+ for deployment (`@supabase/supabase-js` declares `>=22`); verified locally on 20.18.0 |
+| Node.js | 22+ for deployment (`@supabase/supabase-js` declares `>=22`); verified locally on 24.22.1 |
 | npm | 10+ |
 | Supabase project | The existing project; do not create a replacement or reset it |
 | Hosting | Vercel is the reference target; any Node host that supports Next.js 16 works |
